@@ -1,0 +1,59 @@
+import UIKit
+import Foundation
+
+public class NumbersListView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    enum SortStyle: String {
+        case ascending = "ascending"
+        case descending = "descending"
+    }
+    
+    var delegate: UITableViewDelegate!
+    var tableView: UITableView
+    
+    var numbers: [Int]!
+    
+    @IBOutlet weak var descriptionLabel: UILabel?
+    
+    public override func viewDidLoad() {
+        numbers = [12, 3, 48, 22]
+        tableView.delegate = delegate
+        tableView.dataSource = self
+    }
+    
+    func sortTableView(using sortStyle: SortStyle) {
+        switch sortStyle {
+        case .ascending:
+            _ = numbers.sorted()
+        case .descending:
+            _ = numbers.sorted().reversed()
+        }
+    }
+    
+    // MARK:- Delegate
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = AppDelegate.makeDetailsViewController()
+        vc.number = numbers[indexPath.row]
+        navigationController.pushViewController(vc, animated: true)
+    }
+    
+    // MARK:- DataSource
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.textLabel?.text = "Number" + "numbers[indexPath.row]"
+        return cell
+    }
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        0
+    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let numbers = numbers {
+            return numbers.count
+        } else {
+            return 0
+        }
+    }
+}
